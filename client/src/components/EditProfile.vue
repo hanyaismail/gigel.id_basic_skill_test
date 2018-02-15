@@ -1,7 +1,7 @@
 <template>
 	<div class="mt-4">
 				<panel title="Change Profile">
-					<v-form >
+					<v-form v-model="valid" ref="form">
 				    <v-text-field
 				      label="Display Name"
 				      v-model="user.displayname"
@@ -32,8 +32,12 @@
 				  <div 
          	class="danger-alert" 
          	v-html="error"
-         ></div>
+        	></div>
 					
+					<v-alert type="success" :value="success">
+      			Profile changed
+    			</v-alert>
+				  
 				  <v-btn @click="save">Save</v-btn>
 			  </panel>
 	</div>
@@ -46,6 +50,7 @@ import {mapGetters} from 'vuex'
 export default {
 	data () {
 		return {
+			success: false,
 			user: {
 				displayname: null,
 				occupation: null,
@@ -66,36 +71,26 @@ export default {
 				(v) => !!v || 'Location is required'
 			],
 
-			error: null
+			error: null,
+			valid: true
 		}
 	},
-
-	// computed: {
-	// 	...mapGetters([
-	// 			'user'
-	// 		]),
-	// },
 
 	methods: {
 		async save () {
 			try {
-				console.log(this.user)
-				const response = (await UserService.edit(this.user)).data
-				console.log(response)
-				this.$store.dispatch('setUser', response)
-				this.$router.push({name: 'profile'})
+				if (this.$refs.form.validate()) {
+					console.log(this.user)
+					const response = (await UserService.edit(this.user)).data
+					console.log(response)
+					this.$store.dispatch('setUser', response)
+					this.$router.push({name: 'profile'})
+					this.success = true
+				}
 			} catch (err) {
 				this.error = err.response.data.error
 			}
-		},
-
-		changePass: function() {
-			this.$router.push({name: 'changepass'})
-		},
-
-		cek: function() {
-			console.log(this.user);
-		},
+		}
 	},
 
 	async mounted() {

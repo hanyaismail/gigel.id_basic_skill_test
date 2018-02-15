@@ -14,30 +14,16 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-  	// {
-  	// 	path: '*',
-  	// 	redirect: 'upload'
-  	// },
-    {
-      path: '/',
-      name: 'Home',
-      component: Home
-    },
+  	{
+  		path: '*',
+      name: 'redirect',
+  		redirect: 'profile'
+  	},
     {
       path: '/profile',
       name: 'profile',
       component: Profile
     },
-    // {
-    //   path: '/profile/edit',
-    //   name: 'edit',
-    //   component: EditProfile
-    // },
-    // {
-    // 	path: '/upload',
-    // 	name: 'upload',
-    // 	component: Upload
-    // },
     {
     	path: '/images',
     	name: 'images',
@@ -53,10 +39,5 @@ export default new Router({
       name: 'register',
       component: Register
     },
-    // {
-    //   path: '/changepassword',
-    //   name: 'changepass',
-    //   component: ChangePassword
-    // },
   ]
 })

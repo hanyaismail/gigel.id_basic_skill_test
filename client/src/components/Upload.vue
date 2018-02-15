@@ -1,57 +1,33 @@
 <template>
-	<!-- <div>
-		<div>
-			<form enctype="multipart/form-data" @submit.prevent="upload()">
-				<div>
-					<label for="avatar">Upload Here</label>
-					<input type="file" name="avatar" accept="image/*" @change="previewImage($event.target.files)">
-				</div>
-				<button>Upload</button>
-			</form>
-		</div>
-		<div v-if="imagePreview.length>0">
-			<img :src="imagePreview" alt="Image Preview" style="width: 200px" />
-		</div>
-
-		<div v-if="imageSuccess.length>0">
-			<img :src="imageSuccess" alt="Image Preview" style="width: 300px" />
-		</div>
-	</div> -->
-
 	<div class="mt-4">
-		<!-- <v-layout justify-center>
-			<v-flex xs3> -->
-				<panel title="Change Avatar">
-				<div>
-					<form enctype="multipart/form-data" @submit.prevent="upload()">
-						<div>
-							<!-- <label for="avatar">Upload Here</label> -->
-							<input type="file" name="avatar" accept="image/*" @change="previewImage($event.target.files)">
-						</div>
-						<!-- <button>Upload</button> -->
-					</form>
-				</div>
-				<div>
-					<v-avatar
-	        size="150px"
-	        class="grey lighten-4"
-	        >
-	          <img :src="imagePreview">
-			    </v-avatar>
-		  	</div>
+		<panel title="Change Avatar">
+			<div>
+				<form enctype="multipart/form-data" @submit.prevent="upload()">
+					<div>
+						<input type="file" name="avatar" accept="image/*" @change="previewImage($event.target.files)">
+					</div>
+				</form>
+			</div>
+			<div>
+				<v-avatar
+	      size="150px"
+	      class="grey lighten-4"
+	      >
+	        <img :src="imagePreview">
+		    </v-avatar>
+	  	</div>
 
-		    <v-btn @click="upload">Upload</v-btn>
-				
-				<!-- <div v-if="imagePreview.length>0">
-					<img :src="imagePreview" alt="Image Preview" style="width: 200px" />
-				</div> -->
-
-				<!-- <div v-if="imageSuccess.length>0">
-					<img :src="imageSuccess" alt="Image Preview" style="width: 300px" />
-				</div> -->
-	 			</panel>
-			<!-- </v-flex>
-		</v-layout> -->
+	    <v-btn @click="upload" :disabled="!available">Upload</v-btn>
+	    <div v-show="loading">
+	    	<v-progress-linear indeterminate></v-progress-linear>
+	  	</div>
+			
+			<div v-show="success">
+		  	<v-alert type="success" :value="true">
+	      	Reload page to see the change.
+	    	</v-alert>
+    	</div>
+		</panel>
  	</div>
 </template>
 
@@ -64,7 +40,10 @@ export default {
 		return {
 			imagePreview: "../assets/logo.png",
 			imageUpload: "",
-			imageSuccess: ""
+			imageSuccess: "",
+			available: false,
+			loading: false,
+			success: false
 		}
 	},
 
@@ -72,7 +51,7 @@ export default {
 		previewImage (files) {
 			
 			if(files && files[0]) {
-				
+				this.available = true
 				this.imageUpload = files[0]
 				console.log(this.imageUpload)
 				
@@ -91,14 +70,16 @@ export default {
 
 		async upload () {
 			try {
+				this.loading = true
+				this.available = false
 				const files = new FormData()
 				files.append("avatar", this.imageUpload)
 				console.log('upload')
-				// console.log(this.files)
-				// const res = (await axios.post("http://localhost:3000/upload", files, {headers: { 'Content-Type': 'multipart/form-data' } })).data
 				const res = (await ProfPictService.upload(files)).data
 				this.imageSuccess = res.url
-				this.$router.push({name: 'profile'}) 
+				this.loading = false
+				this.success = true
+				this.$router.push({path: '/'}) 
 			} catch (err) {
 				console.log(err)
 			}

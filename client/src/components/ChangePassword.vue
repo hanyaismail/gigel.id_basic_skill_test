@@ -17,12 +17,14 @@
 				      required
 				    ></v-text-field>
 				  </v-form>
+				  
+	  			<v-alert type="error" :value="validpass">
+      			{{error}}
+    			</v-alert>
 
-				  <div 
-         	class="danger-alert" 
-         	v-html="error"
-         ></div>
-
+					<v-alert type="success" :value="success">
+      			Password changed
+    			</v-alert>
 				  <v-btn @click="change" :disabled="!valid">Change</v-btn>
 			  </panel>
 	</div>
@@ -34,11 +36,13 @@ import UserService from '@/services/UserService'
 export default {
 	data () {
 		return {
+			success: false,
+			validpass: false,
 			password: "",
 			newpassword: "",
 			passRules: [
 				(v) => !!v || 'Password is required',
-				(v) => /^[a-zA-Z0-9]{8,32}$/.test(v) || 'password must be more than 8 characters and contains letters and numbers'
+				(v) => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || 'password must be more than 8 characters and contains letters and numbers'
 			],
 
 			error: null,
@@ -56,10 +60,12 @@ export default {
 						password: this.password,
 						newpassword: this.newpassword
 					})
+					this.success = true
 				}
 
-				this.$router.push({name: 'edit'})
+				// this.$router.push({name: 'edit'})
 			} catch (err) {
+				this.validpass = true
 				this.error = err.response.data.error
 			}
 		}
