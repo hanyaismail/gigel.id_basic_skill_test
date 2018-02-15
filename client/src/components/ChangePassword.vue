@@ -1,7 +1,7 @@
 <template>
 	<div class="mt-4">
 				<panel title="Change Password">
-					<v-form v-model="valid" ref="form">
+					<v-form v-model="valid" ref="form" lazy-validation>
 				    <v-text-field
 				      label="Current Password"
 				      type="password"
@@ -14,6 +14,13 @@
 				      type="password"
 				      v-model="newpassword"
 				      :rules="passRules"
+				      required
+				    ></v-text-field>
+				    <v-text-field
+				      label="Confirm New Password"
+				      type="password"
+				      v-model="confpassword"
+				      :rules="confPassRules"
 				      required
 				    ></v-text-field>
 				  </v-form>
@@ -43,6 +50,12 @@ export default {
 			passRules: [
 				(v) => !!v || 'Password is required',
 				(v) => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || 'password must be more than 8 characters and contains letters and numbers'
+			],
+
+			confpassword: "",
+			confPassRules: [
+				(v) => !!v || 'Confirm Password is required',
+				(v) => (v == this.newpassword) || 'Password not valid'
 			],
 
 			error: null,

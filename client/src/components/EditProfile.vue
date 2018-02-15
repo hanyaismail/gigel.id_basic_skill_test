@@ -38,7 +38,7 @@
       			Profile changed
     			</v-alert>
 				  
-				  <v-btn @click="save">Save</v-btn>
+				  <v-btn @click="save" :disabled="!valid">Save</v-btn>
 			  </panel>
 	</div>
 </template>

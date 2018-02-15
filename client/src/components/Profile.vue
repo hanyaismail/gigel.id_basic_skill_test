@@ -50,9 +50,6 @@
 									<span v-if="user.bio">{{user.location}}</span>
 									<span v-else @click.stop="editprofile = true" class="edit">Add Location</span>
 								</div>
-								<div>
-									<v-icon medium color="teal darken-2">email</v-icon>
-								</div>
 							</div>
 
 								<v-btn 
@@ -101,8 +98,15 @@ export default {
 	computed: {
 		...mapState([
 			'isUserLoggedin',
-			'user'
+			'user',
+			'token'
 		])
+	},
+
+	created() {
+		if(!this.token) {
+			this.$router.push({name: 'login'})
+		}
 	},
 
 	methods: {

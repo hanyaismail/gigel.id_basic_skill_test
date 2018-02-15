@@ -33,6 +33,7 @@
 
 <script>
 import UserService from '@/services/UserService'
+import {mapState} from 'vuex' 
 
 export default {
 	data () {
@@ -46,28 +47,19 @@ export default {
 		}
 	},
 
+	computed: {
+		...mapState([
+				'token'
+			])
+	},
+
+	created() {
+		if(this.token){
+			this.$router.push({name: 'profile'})
+		}
+	},
+
 	methods: {
-		// async login () {
-		// 	try {
-		// 		const response = (await UserService.login({
-		// 			email: this.email,
-		// 			password: this.password
-		// 		})).data
-
-		// 		console.log(response.user)
-		// 		console.log(response.token)
-		// 		this.$store.dispatch('setUser', response.user)
-		// 		console.log('setUser')
-		// 		this.$store.dispatch('setToken', response.token)
-		// 		console.log('setToken')
-		// 		this.$router.push({name: 'profile'})
-		// 		console.log('push')
-		// 	} catch (error) {
-		// 		console.log('is ther any error')
-		// 			this.error = error.response.error
-		// 	}
-		// }
-
 		async login () {
 	      try {
 	        const response = await UserService.login({

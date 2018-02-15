@@ -1,6 +1,6 @@
 <template>
 	<v-toolbar fixed dark class="cyan px-4">
-		<v-toolbar-title>DopeX</v-toolbar-title>
+		<v-toolbar-title>Gigel.id</v-toolbar-title>
 		<v-spacer></v-spacer>
 		<v-toolbar-items>
 			

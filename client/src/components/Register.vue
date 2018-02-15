@@ -30,6 +30,13 @@
 				      :rules="passRules"
 				      required
 				    ></v-text-field>
+				    <v-text-field
+				      label="Confirm Password"
+				      type="password"
+				      v-model="confpassword"
+				      :rules="confPassRules"
+				      required
+				    ></v-text-field>
 				  </v-form>
 
 				  <div 
@@ -48,6 +55,7 @@
 
 <script>
 import UserService from '@/services/UserService'
+import {mapState} from 'vuex'
 
 export default {
 	data () {
@@ -77,9 +85,27 @@ export default {
 				(v) => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || 'password must be more than 8 characters and contains letters and numbers'
 			],
 
+			confpassword: "",
+			confPassRules: [
+				(v) => !!v || 'Confirm Password is required',
+				(v) => (v == this.password) || 'Password not valid'
+			],
+
 			error: null,
 
 			valid: true
+		}
+	},
+
+	computed: {
+		...mapState([
+				'token'
+			])
+	},
+
+	created() {
+		if(this.token){
+			this.$router.push({name: 'profile'})
 		}
 	},
 
